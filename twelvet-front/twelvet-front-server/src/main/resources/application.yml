@@ -1,0 +1,162 @@
+# 开发环境配置
+server:
+  # 服务器的HTTP端口，默认为8080
+  port: 8081
+  servlet:
+    # 应用的访问路径
+    context-path: /
+
+# 项目设置
+twelvet:
+  #项目名称
+  name: Pixify-server
+  version: 2.0.0
+  copyrightYear: 2024
+
+spring:
+  messages:
+    #国际化路径
+    basename: i18n/system/twelvet
+    # 缓存时间（秒）
+    cache-duration: 1800
+  application:
+    # 应用名称
+    name: @artifactId@
+  profiles:
+    active: @active@
+  jackson:
+    default-property-inclusion: non_null
+    time-zone: GMT+8
+  # 文件上传
+  servlet:
+    multipart:
+      # 单个文件大小
+      max-file-size: 10MB
+      # 设置总上传的文件大小
+      max-request-size: 20MB
+
+sa-token:
+  # token名称 (同时也是cookie名称)
+  token-name: Authorization
+  # token前缀
+  token-prefix: Bearer
+  # token有效期，单位s 默认1天, -1代表永不过期
+  timeout: 86400
+  # token临时有效期 (指定时间内无操作就视为token过期) 单位: 秒
+  active-timeout: -1
+  # 是否允许同一账号并发登录 (为true时允许一起登录, 为false时新登录挤掉旧登录)
+  is-concurrent: true
+  # 在多人登录同一账号时，是否共用一个token (为true时所有登录共用一个token, 为false时每次登录新建一个token)
+  is-share: true
+  # token风格
+  token-style: uuid
+  # 是否输出操作日志
+  is-log: false
+# 安全放行路径
+security:
+  # 忽略路径
+  ignore:
+    urls:
+      # 静态资源
+      - /favicon.ico
+      - /*.html
+      - /**/*.html
+      - /**/*.css
+      - /**/*.js
+      # swagger 文档配置
+      - /doc.html
+      - /*/api-docs
+      - /*/api-docs/**
+
+# Mybatis配置
+mybatis:
+  # 搜索指定包别名
+  typeAliasesPackage: com.hackorange.**.model
+  # 配置mapper的扫描，找到所有的mapper.xml映射文件
+  mapperLocations: classpath*:mapper/**/*Mapper.xml
+
+# Swagger配置
+swagger:
+  info:
+    # 标题
+    title: '标题：${twelvet.name}后台管理系统_接口文档'
+    # 描述
+    description: 'TwelveT 极速开发后台管理系统'
+    # 版本
+    version: '版本号: ${twelvet.version}'
+    # 作者信息
+    contact:
+      name: 离恨天
+      email: 469850366@qq.com
+      url: xxx
+  components:
+    # 鉴权方式配置
+    security-schemes:
+      apiKey:
+        type: APIKEY
+        in: HEADER
+        name: ${sa-token.token-name}
+
+
+# springdoc-openapi项目配置
+springdoc:
+  swagger-ui:
+    # 是否开启swagger
+    enabled: true
+    path: /swagger-ui.html
+    tags-sorter: alpha
+    operations-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+  group-configs:
+    - group: 1.系统模块
+      packages-to-scan: com.twelvet.system
+    - group: 2.文件系统模块
+      packages-to-scan: com.twelvet.dfs
+    - group: 3.定时任务模块
+      packages-to-scan: com.twelvet.quartz
+    - group: 4.代码生成模块
+      packages-to-scan: com.twelvet.gen
+# knife4j的增强配置，不需要增强可以不配
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+
+# 代码生成
+gen:
+  # 作者
+  author: 离恨天
+  # 默认生成包路径 system 需改成自己的模块名称 如 system monitor tool
+  packageName: com.twelvet.server.system
+  # 自动去除表前缀，默认是false
+  autoRemovePre: false
+  # 表前缀（生成类名不会包含表前缀，多个用逗号分隔）
+  tablePrefix: sys_
+
+# 通用OSS S3配置
+oss:
+  # 开启ossTemplte（默认开启）
+  enable: true
+  accessKey: twelvet
+  secretKey: twelvet
+  region: us-east-2
+  bucketName: twelvet-static
+  endpoint: s3.us-east-2.amazonaws.com
+  # 自带controller
+  http:
+    # 是否开启（默认关闭）
+    enable: false
+    prefix: /s3
+
+# 配置文件加密根密码
+jasypt:
+  encryptor:
+    password: twelvet
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: org.jasypt.iv.NoIvGenerator
+
+mica:
+  xss:
+    enabled: true
+    trim-text: true

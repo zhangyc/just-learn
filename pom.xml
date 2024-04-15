@@ -336,6 +336,7 @@
         <module>twelvet-gen</module>
         <module>twelvet-quartz</module>
         <module>twelvet-dfs</module>
+        <module>twelvet-front</module>
     </modules>
 
     <build>
